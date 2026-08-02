@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Spesial Buat Kamu ❤️</title>
+  <style>
+    /* RESET & BASE STYLES */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #a1c4fd 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow-x: hidden;
+      color: #333;
+      padding: 15px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 420px;
+      min-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    /* CARD CONTAINER */
+    .card {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(12px);
+      border-radius: 28px;
+      padding: 25px 20px;
+      width: 100%;
+      box-shadow: 0 15px 35px rgba(233, 30, 99, 0.2);
+      text-align: center;
+      position: relative;
+      transition: all 0.5s ease-in-out;
+    }
+
+    .hidden {
+      display: none !important;
+      opacity: 0;
+      transform: scale(0.9);
+    }
+
+    .fade-in {
+      animation: fadeIn 0.6s cubic-bezier(0.39, 0.575, 0.565, 1) forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    h2 {
+      color: #e91e63;
+      font-size: 1.35rem;
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+
+    p {
+      color: #555;
+      font-size: 0.92rem;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    /* STEP 1: PUZZLE BENTUK HEART (LOVE GRID) */
+    .heart-puzzle-container {
+      position: relative;
+      width: 260px;
+      height: 220px;
+      margin: 10px auto 25px;
+    }
+
+    .heart-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      grid-template-rows: repeat(4, 1fr);
+      gap: 6px;
+      width: 100%;
+      height: 100%;
+    }
+
+    .puzzle-slot {
+      border-radius: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      font-size: 1.1rem;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .puzzle-slot.empty {
+      background: transparent;
+      pointer-events: none;
+    }
+
+    .puzzle-slot.piece {
+      background: linear-gradient(135deg, #ff4081, #e91e63);
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(233, 30, 99, 0.3);
+      user-select: none;
+      border: 2px solid #ffffff;
+    }
+
+    .puzzle-slot.piece:active {
+      transform: scale(0.92);
+    }
+
+    .puzzle-slot.selected {
+      background: #8e24aa !important;
+      transform: scale(1.1);
+      box-shadow: 0 0 15px rgba(142, 36, 170, 0.6);
+      z-index: 10;
+    }
+
+    .puzzle-slot.correct {
+      background: linear-gradient(135deg, #4caf50, #2e7d32) !important;
+      border-color: #a5d6a7;
+    }
+
+    .status-text {
+      font-size: 0.9rem;
+      color: #e91e63;
+      font-weight: 600;
+      min-height: 24px;
+    }
+
+    /* STEP 2: TOMBOL KABUR */
+    .btn-group {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      margin-top: 25px;
+      position: relative;
+      min-height: 60px;
+    }
+
+    .btn {
+      padding: 12px 26px;
+      border: none;
+      border-radius: 50px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-lanjut {
+      background: linear-gradient(45deg, #e91e63, #ff4081);
+      color: white;
+      box-shadow: 0 4px 15px rgba(233, 30, 99, 0.4);
+      z-index: 2;
+    }
+
+    .btn-lanjut:active {
+      transform: scale(0.95);
+    }
+
+    .btn-engga {
+      background: #757575;
+      color: white;
+      position: absolute;
+      right: 15px;
+      z-index: 1;
+      transition: transform 0.15s ease-out;
+    }
+
+    /* STEP 3: VIDEO PRESISI HP (ANDROID & IPHONE) */
+    .video-wrapper {
+      position: relative;
+      width: 100%;
+      padding-top: 133.33%; /* Rasio 3:4 pas untuk tampilan HP */
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+      background: #000;
+      margin-bottom: 15px;
+    }
+
+    .video-wrapper video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* STEP 4: KATA-KATA ROMANTIS & LUCU */
+    .romantic-box {
+      background: linear-gradient(135deg, #fff0f5 0%, #ffe4e1 100%);
+      padding: 22px 18px;
+      border-radius: 20px;
+      border: 2px solid #ffb6c1;
+      text-align: left;
+      line-height: 1.6;
+      font-size: 0.95rem;
+      color: #444;
+      box-shadow: 0 5px 15px rgba(233, 30, 99, 0.08);
+    }
+
+    .highlight {
+      color: #e91e63;
+      font-weight: bold;
+    }
+
+    .emoji-anim {
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+      display: inline-block;
+      animation: heartBeat 1.3s infinite;
+    }
+
+    @keyframes heartBeat {
+      0% { transform: scale(1); }
+      14% { transform: scale(1.2); }
+      28% { transform: scale(1); }
+      42% { transform: scale(1.2); }
+      70% { transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- STEP 1: PUZZLE BENTUK LOVE -->
+    <div id="step1" class="card fade-in">
+      <div class="emoji-anim">🧩❤️</div>
+      <h2>Susun Puzzle Love Ini!</h2>
+      <p>Klik 2 kotak bergambar angka untuk menukar posisinya sampai berurutan <b>(1 sampai 9)</b> membentuk hati sempurna!</p>
+      
+      <div class="heart-puzzle-container">
+        <div class="heart-grid" id="heartBoard">
+          <!-- Di-generate via JS -->
+        </div>
+      </div>
+      <div id="puzzleStatus" class="status-text"></div>
+    </div>
+
+    <!-- STEP 2: TOMBOL PERTANYAAN -->
+    <div id="step2" class="card hidden">
+      <div class="emoji-anim">😜✨</div>
+      <h2>Udah Siap Nonton Videonya?</h2>
+      <p>Aku udah bikin video khusus buat kamu nih. Lanjut sekarang gak?</p>
+      
+      <div class="btn-group">
+        <button class="btn btn-lanjut" onclick="goToStep3()">Lanjut Dong! ❤️</button>
+        <button id="btnEngga" class="btn btn-engga">Engga mao 😜</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: MENAMPILKAN VIDEO TERLEBIH DAHULU -->
+    <div id="step3" class="card hidden">
+      <h2>Video Khusus Buat Kamu 🎥</h2>
+      <p style="font-size: 0.85rem; margin-bottom: 12px; color: #777;">Tonton videonya sampai selesai ya sayang...</p>
+      
+      <div class="video-wrapper">
+        <video id="myVideo" playsinline controls>
+          <source src="mine.mp4" type="video/mp4">
+          Browser kamu tidak mendukung pemutaran video.
+        </video>
+      </div>
+      <div id="videoStatus" class="status-text" style="font-size: 0.85rem;">⏳ Menunggu video selesai...</div>
+    </div>
+
+    <!-- STEP 4: TRANSISI OTOMATIS KE KATA-KATA ROMANTIS -->
+    <div id="step4" class="card hidden">
+      <div class="emoji-anim">🥰💌</div>
+      <h2>Pesan Dari Hati Aku</h2>
+      
+      <div class="romantic-box">
+        Makasih ya udah mau nonton videonya sampai habis! 😘<br><br>
+        Jujur ya, kamu tuh ibarat <span class="highlight">kuota internet</span> di HP aku... kalau gak ada kamu, rasanya hampa banget dan gak bisa ngapa-ngapain! <br><br>
+        Makasih udah selalu sabar ngadepin aku yang suka absurd dan garing ini. Tetep sama aku terus ya, jangan bosan-bosan. <b>I Love You More Than Coffee! ☕❤️</b>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    /* ==========================================
+       1. PUZZLE BENTUK LOVE (GRID MATRIX)
+    ========================================== */
+    const heartPattern = [
+      0, 1, 0, 2, 0,
+      3, 4, 5, 6, 7,
+      0, 8, 9, 0, 0,
+      0, 0, 0, 0, 0
+    ];
+
+    const solvedPieces = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    
+    // Acak potongan puzzle saat pertama kali dimuat
+    let currentPieces = [...solvedPieces].sort(() => Math.random() - 0.5);
+    let selectedIdx = null;
+
+    function renderHeartBoard() {
+      const board = document.getElementById('heartBoard');
+      board.innerHTML = '';
+      let pieceCounter = 0;
+
+      for (let i = 0; i < 20; i++) {
+        const slot = document.createElement('div');
+        
+        if (heartPattern[i] !== 0) {
+          const pieceVal = currentPieces[pieceCounter];
+          const actualIndex = pieceCounter;
+          
+          slot.className = 'puzzle-slot piece' + (selectedIdx === actualIndex ? ' selected' : '');
+          slot.innerText = pieceVal;
+          slot.onclick = () => selectPuzzlePiece(actualIndex);
+          
+          pieceCounter++;
+        } else {
+          slot.className = 'puzzle-slot empty';
+        }
+        board.appendChild(slot);
+      }
+    }
+
+    function selectPuzzlePiece(index) {
+      if (selectedIdx === null) {
+        selectedIdx = index;
+      } else {
+        // Swap / Tukar posisi
+        let temp = currentPieces[selectedIdx];
+        currentPieces[selectedIdx] = currentPieces[index];
+        currentPieces[index] = temp;
+        selectedIdx = null;
+      }
+      renderHeartBoard();
+      checkPuzzleSolved();
+    }
+
+    function checkPuzzleSolved() {
+      const isSolved = currentPieces.every((val, idx) => val === solvedPieces[idx]);
+      if (isSolved) {
+        document.querySelectorAll('.puzzle-slot.piece').forEach(el => el.classList.add('correct'));
+        document.getElementById('puzzleStatus').innerText = "Hore! Puzzle Hati Selesai 🎉";
+        
+        setTimeout(() => {
+          document.getElementById('step1').classList.add('hidden');
+          const step2 = document.getElementById('step2');
+          step2.classList.remove('hidden');
+          step2.classList.add('fade-in');
+        }, 1200);
+      }
+    }
+
+    renderHeartBoard();
+
+    /* ==========================================
+       2. TOMBOL HINDAR / ENGGA MAO
+    ========================================== */
+    const btnEngga = document.getElementById('btnEngga');
+
+    function moveButton() {
+      const card = document.getElementById('step2');
+      const cardRect = card.getBoundingClientRect();
+      const btnRect = btnEngga.getBoundingClientRect();
+
+      const maxX = (cardRect.width / 2) - (btnRect.width / 2) - 20;
+      const maxY = (cardRect.height / 2) - (btnRect.height / 2) - 20;
+
+      const randomX = (Math.random() * maxX * 2) - maxX;
+      const randomY = (Math.random() * maxY * 2) - maxY;
+
+      btnEngga.style.transform = `translate(${randomX}px, ${randomY}px)`;
+    }
+
+    btnEngga.addEventListener('mouseover', moveButton);
+    btnEngga.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      moveButton();
+    });
+
+    /* ==========================================
+       3. PEMUTARAN VIDEO DULU -> TRANSISI KATA-KATA
+    ========================================== */
+    function goToStep3() {
+      document.getElementById('step2').classList.add('hidden');
+      const step3 = document.getElementById('step3');
+      step3.classList.remove('hidden');
+      step3.classList.add('fade-in');
+
+      const video = document.getElementById('myVideo');
+      
+      // Putar video
+      video.play().catch(err => {
+        console.log("Autoplay terhalang browser, menanti tap pengguna.", err);
+      });
+
+      // Deteksi otomatis saat video SELESAI
+      video.onended = function() {
+        document.getElementById('videoStatus').innerText = "Video Selesai! Mengalihkan... ✨";
+        
+        setTimeout(() => {
+          step3.classList.add('hidden');
+          const step4 = document.getElementById('step4');
+          step4.classList.remove('hidden');
+          step4.classList.add('fade-in');
+        }, 1000);
+      };
+    }
+  </script>
+</body>
+</html>
