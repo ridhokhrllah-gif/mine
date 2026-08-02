@@ -78,7 +78,7 @@
       margin-bottom: 20px;
     }
 
-    /* STEP 1: PUZZLE BENTUK HEART (LOVE GRID) */
+    /* STEP 1: PUZZLE BENTUK HEART */
     .heart-puzzle-container {
       position: relative;
       width: 260px;
@@ -142,7 +142,7 @@
       min-height: 24px;
     }
 
-    /* STEP 2: TOMBOL KABUR */
+    /* STEP 2: TOMBOL SEJAJAR KIRI-KANAN RAPI */
     .btn-group {
       display: flex;
       justify-content: center;
@@ -150,17 +150,18 @@
       gap: 15px;
       margin-top: 25px;
       position: relative;
-      min-height: 60px;
+      width: 100%;
+      min-height: 50px;
     }
 
     .btn {
-      padding: 12px 26px;
+      padding: 12px 24px;
       border: none;
       border-radius: 50px;
       font-size: 0.95rem;
       font-weight: 700;
       cursor: pointer;
-      transition: all 0.2s ease;
+      white-space: nowrap;
     }
 
     .btn-lanjut {
@@ -177,17 +178,16 @@
     .btn-engga {
       background: #757575;
       color: white;
-      position: absolute;
-      right: 15px;
+      position: relative;
       z-index: 1;
-      transition: transform 0.15s ease-out;
+      transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
     }
 
-    /* STEP 3: VIDEO PRESISI HP (ANDROID & IPHONE) */
+    /* STEP 3: VIDEO PRESISI HP */
     .video-wrapper {
       position: relative;
       width: 100%;
-      padding-top: 133.33%; /* Rasio 3:4 pas untuk tampilan HP */
+      padding-top: 133.33%; /* Rasio 3:4 pas untuk layar Android & iPhone */
       border-radius: 20px;
       overflow: hidden;
       box-shadow: 0 10px 25px rgba(0,0,0,0.25);
@@ -256,7 +256,7 @@
       <div id="puzzleStatus" class="status-text"></div>
     </div>
 
-    <!-- STEP 2: TOMBOL PERTANYAAN -->
+    <!-- STEP 2: TOMBOL SEJAJAR PERSIS KIRI-KANAN -->
     <div id="step2" class="card hidden">
       <div class="emoji-anim">😜✨</div>
       <h2>Udah Siap Nonton Videonya?</h2>
@@ -268,21 +268,21 @@
       </div>
     </div>
 
-    <!-- STEP 3: MENAMPILKAN VIDEO TERLEBIH DAHULU -->
+    <!-- STEP 3: TAMPILKAN VIDEO DULU -->
     <div id="step3" class="card hidden">
       <h2>Video Khusus Buat Kamu 🎥</h2>
       <p style="font-size: 0.85rem; margin-bottom: 12px; color: #777;">Tonton videonya sampai selesai ya sayang...</p>
       
       <div class="video-wrapper">
         <video id="myVideo" playsinline controls>
-          <source src="mine.mp4" type="video/mp4">
+          <source src="my-video.mp4" type="video/mp4">
           Browser kamu tidak mendukung pemutaran video.
         </video>
       </div>
       <div id="videoStatus" class="status-text" style="font-size: 0.85rem;">⏳ Menunggu video selesai...</div>
     </div>
 
-    <!-- STEP 4: TRANSISI OTOMATIS KE KATA-KATA ROMANTIS -->
+    <!-- STEP 4: TRANSISI KE KATA-KATA ROMANTIS & LUCU -->
     <div id="step4" class="card hidden">
       <div class="emoji-anim">🥰💌</div>
       <h2>Pesan Dari Hati Aku</h2>
@@ -298,7 +298,7 @@
 
   <script>
     /* ==========================================
-       1. PUZZLE BENTUK LOVE (GRID MATRIX)
+       1. PUZZLE BENTUK LOVE (5x5 GRID)
     ========================================== */
     const heartPattern = [
       0, 1, 0, 2, 0,
@@ -308,8 +308,6 @@
     ];
 
     const solvedPieces = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-    
-    // Acak potongan puzzle saat pertama kali dimuat
     let currentPieces = [...solvedPieces].sort(() => Math.random() - 0.5);
     let selectedIdx = null;
 
@@ -341,7 +339,6 @@
       if (selectedIdx === null) {
         selectedIdx = index;
       } else {
-        // Swap / Tukar posisi
         let temp = currentPieces[selectedIdx];
         currentPieces[selectedIdx] = currentPieces[index];
         currentPieces[index] = temp;
@@ -369,7 +366,7 @@
     renderHeartBoard();
 
     /* ==========================================
-       2. TOMBOL HINDAR / ENGGA MAO
+       2. TOMBOL KABUR DENGAN POSISI AWAL PRESISI SEJAJAR
     ========================================== */
     const btnEngga = document.getElementById('btnEngga');
 
@@ -378,11 +375,12 @@
       const cardRect = card.getBoundingClientRect();
       const btnRect = btnEngga.getBoundingClientRect();
 
+      // Hitung batas aman di dalam card
       const maxX = (cardRect.width / 2) - (btnRect.width / 2) - 20;
       const maxY = (cardRect.height / 2) - (btnRect.height / 2) - 20;
 
-      const randomX = (Math.random() * maxX * 2) - maxX;
-      const randomY = (Math.random() * maxY * 2) - maxY;
+      let randomX = (Math.random() * maxX * 2) - maxX;
+      let randomY = (Math.random() * maxY * 2) - maxY;
 
       btnEngga.style.transform = `translate(${randomX}px, ${randomY}px)`;
     }
@@ -404,12 +402,10 @@
 
       const video = document.getElementById('myVideo');
       
-      // Putar video
       video.play().catch(err => {
         console.log("Autoplay terhalang browser, menanti tap pengguna.", err);
       });
 
-      // Deteksi otomatis saat video SELESAI
       video.onended = function() {
         document.getElementById('videoStatus').innerText = "Video Selesai! Mengalihkan... ✨";
         
